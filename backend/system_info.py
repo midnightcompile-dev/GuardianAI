@@ -1,4 +1,4 @@
-import psutil
+from collectors.system_collector import get_system_info
 
 
 def print_header():
@@ -13,27 +13,26 @@ def print_footer():
 def system_health(cpu, ram):
     if cpu < 50 and ram < 70:
         return "🟢 Good"
-
     elif cpu < 80 and ram < 90:
         return "🟡 Moderate"
-
     else:
         return "🔴 High Resource Usage"
 
 
-cpu_usage = psutil.cpu_percent(interval=1)
-memory = psutil.virtual_memory()
-disk = psutil.disk_usage("/")
-battery = psutil.sensors_battery()
+data = get_system_info()
 
-gb = 1024 ** 3
+cpu = data["cpu"]
+memory = data["memory"]
+disk = data["disk"]
+battery = data["battery"]
+gb = data["gb"]
 
 print_header()
 
-print(f"System Health : {system_health(cpu_usage, memory.percent)}")
+print(f"System Health : {system_health(cpu, memory.percent)}")
 print()
 
-print(f"CPU Usage     : {cpu_usage}%")
+print(f"CPU Usage     : {cpu}%")
 
 print(f"Total RAM     : {memory.total / gb:.2f} GB")
 print(f"Used RAM      : {memory.used / gb:.2f} GB")
@@ -51,10 +50,7 @@ print()
 
 if battery:
     print(f"Battery       : {battery.percent}%")
-    if battery.power_plugged:
-        print("Status        : Charging 🔌")
-    else:
-        print("Status        : On Battery 🔋")
+    print("Status        : Charging 🔌" if battery.power_plugged else "Status        : On Battery 🔋")
 else:
     print("Battery information not available.")
 
