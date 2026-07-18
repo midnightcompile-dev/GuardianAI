@@ -1,7 +1,15 @@
 import psutil
 
-cpu_usage = psutil.cpu_percent(interval=1)
+memory = psutil.virtual_memory()
 
-print("========== GuardianAI ==========")
-print(f"CPU Usage : {cpu_usage}%")
-print("================================")
+gb = 1024 ** 3
+
+print("🛡️ GuardianAI - System Monitor")
+print("=" * 40)
+
+print(f"Total RAM     : {memory.total / gb:.2f} GB")
+print(f"Used RAM      : {memory.used / gb:.2f} GB")
+print(f"Available RAM : {memory.available / gb:.2f} GB")
+print(f"RAM Usage     : {memory.percent}%")
+
+print("=" * 40)
