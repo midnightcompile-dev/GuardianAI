@@ -1,15 +1,33 @@
+import time
+
 from collectors.process_collector import get_running_processes
-from analyzer.process_analyzer import analyze_process
+from history.process_history import (
+    get_previous_processes,
+    update_processes,
+)
 
-processes = get_running_processes()
+print("GuardianAI Live Process Monitor")
+print("=" * 60)
 
-print("GuardianAI Process Analysis")
-print("=" * 80)
+while True:
+    processes = get_running_processes()
 
-for process in processes[:20]:
-    status = analyze_process(process)
+    process_names = []
 
-    print(f"Name   : {process['name']}")
-    print(f"Status : {status}")
-    print(f"Path   : {process['exe']}")
-    print("-" * 80)
+    for process in processes:
+        if process["name"]:
+            process_names.append(process["name"])
+
+    current_processes = set(process_names)
+    previous_processes = get_previous_processes()
+
+    new_processes = current_processes - previous_processes
+
+    if new_processes:
+        print("\n🆕 New Process Detected:")
+        for process in sorted(new_processes):
+            print(f"   • {process}")
+
+    update_processes(process_names)
+
+    time.sleep(3)
