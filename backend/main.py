@@ -1,0 +1,7 @@
+print("=" * 40)
+print("🛡️ GuardianAI v0.1")
+print("=" * 40)
+print()
+print("Starting GuardianAI...")
+print("Initializing system...")
+print("GuardianAI started successfully!")
