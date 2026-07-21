@@ -1,33 +1,31 @@
-import time
-
 from collectors.process_collector import get_running_processes
-from history.process_history import (
-    get_previous_processes,
-    update_processes,
-)
+from analyzer.risk_analyzer import calculate_risk
 
-print("GuardianAI Live Process Monitor")
-print("=" * 60)
+processes = get_running_processes()
 
-while True:
-    processes = get_running_processes()
+print("GuardianAI Security Scan")
+print("=" * 80)
 
-    process_names = []
+found = False
 
-    for process in processes:
-        if process["name"]:
-            process_names.append(process["name"])
+for process in processes:
 
-    current_processes = set(process_names)
-    previous_processes = get_previous_processes()
+    score, level, reasons = calculate_risk(process)
 
-    new_processes = current_processes - previous_processes
+    if score >= 30:
 
-    if new_processes:
-        print("\n🆕 New Process Detected:")
-        for process in sorted(new_processes):
-            print(f"   • {process}")
+        found = True
 
-    update_processes(process_names)
+        print(f"Name       : {process['name']}")
+        print(f"Risk Score : {score}/100")
+        print(f"Risk Level : {level}")
 
-    time.sleep(3)
+        print("Reasons:")
+        for reason in reasons:
+            print(f"  • {reason}")
+
+        print(f"Path : {process['exe']}")
+        print("-" * 80)
+
+if not found:
+    print("✅ No suspicious processes were found.")

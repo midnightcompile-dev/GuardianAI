@@ -1,0 +1,16 @@
+TRUSTED_PROCESSES = {
+    "chrome.exe",
+    "code.exe",
+    "explorer.exe",
+    "svchost.exe",
+    "services.exe",
+    "winlogon.exe",
+    "lsass.exe",
+    "smss.exe",
+    "csrss.exe",
+    "taskhostw.exe",
+    "fontdrvhost.exe",
+    "registry",
+    "system",
+    "system idle process",
+}
